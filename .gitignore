@@ -1,0 +1,49 @@
+# ── Rust / Soroban ──────────────────────────────────────
+target/
+Cargo.lock
+*.wasm
+*.wasm.gz
+*.wasm.optimized
+
+# Stellar CLI state
+.stellar/
+
+# ── Node / Next.js / pnpm ───────────────────────────────
+node_modules/
+.next/
+out/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+
+# pnpm lockfile (keep committed for reproducible builds)
+# pnpm-lock.yaml is intentionally NOT ignored
+
+# ── Environment / Secrets ───────────────────────────────
+.env
+.env.*
+!.env.example
+!.env.deploy.example
+
+# Don't commit deploy env with real keys
+.env.deploy
+
+# ── IDE / Editor ────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ── OS ──────────────────────────────────────────────────
+*.log
+*.pid
+
+# ── Test artifacts ──────────────────────────────────────
+test_snapshots/
+
+# ── Misc ────────────────────────────────────────────────
+*.tar.gz
+*.zip
