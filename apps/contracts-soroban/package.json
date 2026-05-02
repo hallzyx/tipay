@@ -1,0 +1,11 @@
+{
+  "name": "contracts-soroban",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "build": "stellar contract build",
+    "test": "cargo test",
+    "deploy:testnet": "bash deploy.sh",
+    "initialize": "bash initialize.sh"
+  }
+}
