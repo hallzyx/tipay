@@ -1,0 +1,162 @@
+@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;900&display=swap");
+
+@theme {
+  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Space Grotesk", ui-monospace, monospace;
+
+  /* ── Palette ─────────────────────────────────────── */
+  --color-surface: #f9f9f9;
+  --color-onsurface: #1b1b1b;
+  --color-primary: #000000;
+  --color-onprimary: #ffffff;
+  --color-secondary: #b22200;
+  --color-secondary-container: #d73b19;
+  --color-onsecondary-container: #ffffff;
+  --color-outline: #000000;
+  --color-background: #f9f9f9;
+  --color-border-strong: #000000;
+  --color-border-light: #cfc4c5;
+  --color-success: #15803d;
+  --color-warning: #b45309;
+  --color-destructive: #dc2626;
+
+  /* ── Shadows (hard, no blur) ────────────────────── */
+  --shadow-hard: 8px 8px 0px 0px #000000;
+  --shadow-hard-sm: 4px 4px 0px 0px #000000;
+  --shadow-hard-orange: 4px 4px 0px 0px #d73b19;
+  --shadow-hard-active: 2px 2px 0px 0px #000000;
+}
+
+/* ── Base Layer ─────────────────────────────────────── */
+@layer base {
+  html {
+    background: var(--color-background);
+    color: var(--color-onsurface);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    min-height: 100vh;
+    position: relative;
+  }
+}
+
+/* ── Visible Grid Pattern (40px) ──────────────────────── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image:
+    linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-left: 2px solid #000;
+}
+::-webkit-scrollbar-thumb {
+  background: #000;
+  border: 2px solid #000;
+}
+
+/* ── Utilities ─────────────────────────────────────────── */
+@utility border-hard {
+  border: 2px solid var(--color-border-strong);
+}
+
+@utility border-hard-sm {
+  border: 1px solid var(--color-border-strong);
+}
+
+@utility border-hard-light {
+  border: 1px solid var(--color-border-light);
+}
+
+@utility shadow-hard {
+  box-shadow: var(--shadow-hard);
+}
+
+@utility shadow-hard-sm {
+  box-shadow: var(--shadow-hard-sm);
+}
+
+@utility shadow-hard-orange {
+  box-shadow: var(--shadow-hard-orange);
+}
+
+@utility section-border {
+  border-top: 2px solid var(--color-border-strong);
+  border-bottom: 2px solid var(--color-border-strong);
+}
+
+@utility card-brutalist {
+  border: 2px solid var(--color-border-strong);
+  background: white;
+  box-shadow: var(--shadow-hard);
+  padding: 2rem;
+}
+
+@utility input-brutalist {
+  border: 2px solid var(--color-border-strong);
+  background: white;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  transition: border-color 0.075s;
+}
+
+@utility label-brutalist {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.75rem;
+  color: var(--color-onsurface);
+}
+
+/* ── Animations ────────────────────────────────────────── */
+@utility animate-slide-up {
+  animation: slide-up 0.2s ease-out;
+}
+
+@utility animate-fade-in {
+  animation: fade-in 0.15s ease-out;
+}
+
+@utility animate-pulse-border {
+  animation: pulse-border 2s ease-in-out infinite;
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse-border {
+  0%, 100% { border-color: #000; }
+  50% { border-color: #d73b19; }
+}
