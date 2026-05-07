@@ -106,7 +106,7 @@ export function useContractWrite() {
  * Hook for read-only contract calls.
  * Use this directly or via the helper functions below.
  */
-export function useContractRead() {
+export function useContractRead(sourceAddress?: string) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -117,17 +117,18 @@ export function useContractRead() {
     setLoading(true);
     setError(null);
     try {
-      const result = await simulateRead(method, args);
+      const result = await simulateRead(method, args, sourceAddress);
       return decodeScVal(result) as T;
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Read failed";
+      console.error(`useContractRead error for ${method}:`, err);
       setError(message);
       throw err;
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [sourceAddress]);
 
   return { read, loading, error };
 }
@@ -202,27 +203,43 @@ export async function finalizeSession(
 }
 
 /**
+ * Safely converts a BigInt or number value to a JavaScript number.
+ * Use only for values known to fit within safe integer range.
+ */
+function toNumber(val: bigint | number): number {
+  return typeof val === "bigint" ? Number(val) : val;
+}
+
+/**
  * Reads session data from the contract.
+ * In SDK v15+ with Protocol 22, structs are serialized as ScvMap (object with
+ * symbolic keys), NOT as ScvVec (array). We must use property access.
  */
 export async function getSession(
   readFn: <T>(method: string, args: StellarSdk.xdr.ScVal[]) => Promise<T>,
   sessionId: number,
 ): Promise<Session | null> {
   try {
-    const result = await readFn<[string, bigint, bigint, bigint, boolean, boolean, number]>(
-      "get_session",
-      [u64ToScVal(sessionId)],
-    );
+    const result = await readFn<{
+      host: string;
+      amount: bigint;
+      deadline: bigint;
+      voting_period: bigint;
+      finalized: boolean;
+      active: boolean;
+      participant_count: number;
+    }>("get_session", [u64ToScVal(sessionId)]);
     return {
-      host: result[0],
-      amount: result[1],
-      deadline: result[2],
-      voting_period: result[3],
-      finalized: result[4],
-      active: result[5],
-      participant_count: result[6],
+      host: result.host,
+      amount: result.amount,
+      deadline: result.deadline,
+      voting_period: result.voting_period,
+      finalized: result.finalized,
+      active: result.active,
+      participant_count: toNumber(result.participant_count),
     };
-  } catch {
+  } catch (err) {
+    console.warn(`get_session(${sessionId}) failed:`, err);
     return null;
   }
 }
@@ -306,8 +323,10 @@ export async function getSessionCount(
   readFn: <T>(method: string, args: StellarSdk.xdr.ScVal[]) => Promise<T>,
 ): Promise<number> {
   try {
-    return await readFn<number>("session_count", []);
-  } catch {
+    const val = await readFn<bigint>("session_count", []);
+    return toNumber(val);
+  } catch (err) {
+    console.warn("getSessionCount failed:", err);
     return 0;
   }
 }
@@ -320,10 +339,12 @@ export async function getVotingDeadline(
   sessionId: number,
 ): Promise<number> {
   try {
-    return await readFn<number>("voting_deadline", [
+    const val = await readFn<bigint>("voting_deadline", [
       u64ToScVal(sessionId),
     ]);
-  } catch {
+    return toNumber(val);
+  } catch (err) {
+    console.warn(`getVotingDeadline(${sessionId}) failed:`, err);
     return 0;
   }
 }

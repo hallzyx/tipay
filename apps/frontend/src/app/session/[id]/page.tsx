@@ -57,7 +57,7 @@ export default function SessionDetailPage({
   const { id } = use(params);
   const sessionId = parseInt(id);
   const { address } = useFreighter();
-  const { read } = useContractRead();
+  const { read } = useContractRead(address ?? undefined);
   const contractWrite = useContractWrite();
 
   const [session, setSession] = useState<{

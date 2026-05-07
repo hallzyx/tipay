@@ -51,10 +51,14 @@ export async function buildContractTx(
 export async function simulateRead(
   method: string,
   args: StellarSdk.xdr.ScVal[],
+  sourceAddress?: string,
 ): Promise<StellarSdk.xdr.ScVal> {
   const rpc = getRpc();
+  // Use the provided source address or fall back to the standard null account.
+  // For simulations the sequence is always "0" since the tx is never submitted.
   const sourceAccount = new StellarSdk.Account(
-    "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF",
+    sourceAddress ??
+      "GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWHF",
     "0",
   );
   const contract = new StellarSdk.Contract(contractId);
@@ -70,10 +74,19 @@ export async function simulateRead(
   const simulation = await rpc.simulateTransaction(tx);
 
   if (StellarSdk.rpc.Api.isSimulationError(simulation)) {
-    throw new Error(`Simulation failed: ${simulation.error}`);
+    throw new Error(
+      `simulateTransaction error for ${method}: ${simulation.error}`,
+    );
   }
 
-  return simulation.result!.retval;
+  // SDK v15 can return result without retval if simulation has no invocation
+  if (!simulation.result) {
+    throw new Error(
+      `simulateTransaction for ${method}: no result returned`,
+    );
+  }
+
+  return simulation.result.retval;
 }
 
 /* ── ScVal helpers ──────────────────────────────────── */

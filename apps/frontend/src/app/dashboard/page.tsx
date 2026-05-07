@@ -34,19 +34,22 @@ interface SessionSummary {
 
 export default function DashboardPage() {
   const { connected, address } = useFreighter();
-  const { read } = useContractRead();
+  const { read } = useContractRead(address ?? undefined);
 
   const [sessions, setSessions] = useState<SessionSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
   /** Fetch all sessions from the contract. */
   const fetchSessions = useCallback(async () => {
     if (!address) return;
     setLoading(true);
     try {
+      setFetchError(null);
       const count = await getSessionCount(read);
+      console.log("Session count:", count);
 
       const result: SessionSummary[] = [];
       for (let i = 0; i < count; i++) {
@@ -83,7 +86,9 @@ export default function DashboardPage() {
       result.reverse();
       setSessions(result);
     } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
       console.error("Failed to fetch sessions:", err);
+      setFetchError(msg);
     } finally {
       setLoading(false);
     }
@@ -140,6 +145,18 @@ export default function DashboardPage() {
           New Session
         </button>
       </div>
+
+      {/* Error banner */}
+      {fetchError && (
+        <div className="mb-8 p-6 border-2 border-[#d73b19] bg-red-50">
+          <p className="text-xs font-bold text-[#d73b19] uppercase tracking-widest mb-2">
+            Error Loading Sessions
+          </p>
+          <p className="text-sm font-mono text-red-800 break-all">
+            {fetchError}
+          </p>
+        </div>
+      )}
 
       {/* Stats bar */}
       <div className="grid grid-cols-3 gap-6 mb-16">

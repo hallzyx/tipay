@@ -5,7 +5,7 @@
  */
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFreighter } from "@/hooks/useFreighter";
 import {
   useContractWrite,
@@ -37,14 +37,19 @@ export function DepositButton({
   const [alreadyDeposited, setAlreadyDeposited] = useState(false);
   const [checking, setChecking] = useState(true);
 
-  // Check if already deposited
-  useState(() => {
-    if (!address) return;
+  /** Check if already deposited on mount. */
+  useEffect(() => {
+    if (!address) {
+      setChecking(false);
+      return;
+    }
     hasDepositedFn(read, sessionId, address).then((d) => {
       setAlreadyDeposited(d);
       setChecking(false);
+    }).catch(() => {
+      setChecking(false);
     });
-  });
+  }, [address, read, sessionId]);
 
   // Update after successful deposit
   const handleDeposit = async () => {

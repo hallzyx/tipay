@@ -1,5 +1,5 @@
 /**
- * Freighter wallet connection hook. Uses @stellar/freighter-api v3.x.
+ * Freighter wallet connection hook. Uses @stellar/freighter-api v6.x.
  * @module hooks/useFreighter
  */
 "use client";
