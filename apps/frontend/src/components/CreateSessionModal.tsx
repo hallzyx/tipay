@@ -18,7 +18,7 @@ interface CreateSessionModalProps {
 
 /**
  * Full session creation form.
- * Fields: amount (XLM), date, time, voting period, participant addresses.
+ * Fields: amount (USDC), date, time, voting period, participant addresses.
  */
 export function CreateSessionModal({
   open,
@@ -151,7 +151,7 @@ export function CreateSessionModal({
           <div>
             <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] mb-3">
               <Coins className="w-4 h-4" strokeWidth={3} />
-              Amount Per Person (XLM)
+               Amount Per Person (USDC)
             </label>
             <input
               type="number"

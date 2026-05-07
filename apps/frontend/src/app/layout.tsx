@@ -6,11 +6,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Tipay — Accountability on Stellar",
   description:
-    "Create accountability sessions with XLM on Stellar. Deposit, vote, and earn rewards when others flake.",
+    "Create accountability sessions with USDC on Stellar. Deposit, vote, and earn rewards when others flake.",
   openGraph: {
     title: "Tipay — Accountability on Stellar",
     description:
-      "Create accountability sessions with XLM on Stellar.",
+      "Create accountability sessions with USDC on Stellar.",
     type: "website",
   },
 };

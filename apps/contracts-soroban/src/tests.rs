@@ -365,7 +365,7 @@ fn test_finalize_refund_when_not_all_deposited() {
 #[test]
 fn test_finalize_with_majority_vote() {
     let env = Env::default();
-    let (client, _, _, participants) = setup(&env);
+    let (client, owner, token_sac, participants) = setup(&env);
     let p0 = participants.get(0).unwrap();
     let p1 = participants.get(1).unwrap();
     let p2 = participants.get(2).unwrap();
@@ -384,10 +384,56 @@ fn test_finalize_with_majority_vote() {
     // Advance past voting period
     env.ledger().set_timestamp(1500);
 
+    // Record owner balance before finalize
+    let token = token::Client::new(&env, &token_sac);
+    let owner_balance_before = token.balance(&owner);
+
     client.finalize_session(&sid);
 
     let s = client.get_session(&sid);
     assert!(s.finalized);
+
+    // Owner should have received 10% fee of absentee's deposit
+    // Amount = 1 XLM = 10_000_000 stroops
+    // Fee = 10_000_000 * 10 / 100 = 1_000_000
+    let owner_balance_after = token.balance(&owner);
+    let fee = owner_balance_after - owner_balance_before;
+    assert_eq!(fee, 1_000_000); // 10% of 1 XLM = 0.1 XLM
+}
+
+#[test]
+fn test_finalize_all_attendees_refund() {
+    let env = Env::default();
+    let (client, owner, token_sac, participants) = setup(&env);
+    let p0 = participants.get(0).unwrap();
+    let p1 = participants.get(1).unwrap();
+    let p2 = participants.get(2).unwrap();
+
+    let sid = create_default_session(&client, &p0, &participants);
+    client.deposit(&p0, &sid);
+    client.deposit(&p1, &sid);
+    client.deposit(&p2, &sid);
+
+    // All 3 vote, no clear majority against anyone
+    // 3 voters → threshold = 3/2 + 1 = 2
+    // Each gets 1 vote → nobody absent
+    env.ledger().set_timestamp(1100);
+    client.cast_vote(&p0, &sid, &p1); // p1 gets 1
+    client.cast_vote(&p1, &sid, &p2); // p2 gets 1
+    client.cast_vote(&p2, &sid, &p0); // p0 gets 1
+
+    let token = token::Client::new(&env, &token_sac);
+    let owner_balance_before = token.balance(&owner);
+
+    env.ledger().set_timestamp(1500);
+    client.finalize_session(&sid);
+
+    let s = client.get_session(&sid);
+    assert!(s.finalized);
+
+    // No fee when everyone attends
+    let owner_balance_after = token.balance(&owner);
+    assert_eq!(owner_balance_after, owner_balance_before);
 }
 
 #[test]

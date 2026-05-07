@@ -142,13 +142,14 @@ export type ContractWriter = ReturnType<typeof useContractWrite>;
 export async function createSession(
   invoker: ContractWriter,
   host: string,
-  amountXLM: string,
+  amountToken: string,
   deadlineTimestamp: number,
   votingPeriodSeconds: number,
   participants: string[],
 ) {
+  // Convert token amount to stroops (1 token = 10_000_000 stroops)
   const amountStroops = BigInt(
-    Math.round(parseFloat(amountXLM) * 10_000_000),
+    Math.round(parseFloat(amountToken) * 10_000_000),
   );
 
   return invoker.invoke("create_session", [
@@ -161,7 +162,7 @@ export async function createSession(
 }
 
 /**
- * Deposits XLM into a session.
+ * Deposits tokens into a session.
  */
 export async function deposit(
   invoker: ContractWriter,

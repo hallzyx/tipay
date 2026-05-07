@@ -22,7 +22,7 @@ import { VotePanel } from "@/components/VotePanel";
 import { StatusBadge, getSessionStatus } from "@/components/StatusBadge";
 import {
   shortAddress,
-  formatXLM,
+  formatStroops,
   formatDate,
   formatDuration,
 } from "@/lib/utils";
@@ -224,8 +224,8 @@ export default function SessionDetailPage({
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
           <div className="border-2 border-black p-6">
             <Coins className="w-5 h-5 text-gray-400 mb-2" strokeWidth={3} />
-            <p className="text-2xl font-black">{formatXLM(session.amount)}</p>
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mt-1">XLM / Person</p>
+            <p className="text-2xl font-black">{formatStroops(session.amount)}</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mt-1">USDC / Person</p>
           </div>
           <div className="border-2 border-black p-6">
             <Users className="w-5 h-5 text-gray-400 mb-2" strokeWidth={3} />

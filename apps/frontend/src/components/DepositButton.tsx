@@ -1,5 +1,5 @@
 /**
- * Deposit button — transfers XLM into a session via SAC.
+ * Deposit button — transfers tokens into a session via SAC.
  * Single-step deposit (no approve needed on Stellar).
  * @module components/DepositButton
  */
@@ -13,7 +13,7 @@ import {
   hasDeposited as hasDepositedFn,
 } from "@/hooks/useContract";
 import { useContractRead } from "@/hooks/useContract";
-import { formatXLM } from "@/lib/utils";
+import { formatStroops } from "@/lib/utils";
 import { ArrowDownToLine, Check } from "lucide-react";
 
 interface DepositButtonProps {
@@ -23,7 +23,7 @@ interface DepositButtonProps {
 }
 
 /**
- * Button to deposit XLM into a session.
+ * Button to deposit tokens into a session.
  * Validates: participant, not already deposited, before deadline.
  */
 export function DepositButton({
@@ -76,7 +76,7 @@ export function DepositButton({
       <div className="flex items-center gap-3 border-2 border-black bg-black text-white p-6 shadow-hard-sm">
         <Check className="w-6 h-6" strokeWidth={3} />
         <span className="text-sm font-bold uppercase tracking-[0.1em]">
-          Deposited {formatXLM(amount)} XLM
+          Deposited {formatStroops(amount, 2, "USDC")}
         </span>
       </div>
     );
@@ -91,7 +91,7 @@ export function DepositButton({
       <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mb-4">
         Your Deposit
       </p>
-      <p className="text-3xl font-black mb-4">{formatXLM(amount)} XLM</p>
+      <p className="text-3xl font-black mb-4">{formatStroops(amount, 2, "USDC")}</p>
       <button
         onClick={handleDeposit}
         disabled={isPending || !address}
@@ -101,7 +101,7 @@ export function DepositButton({
         {contractWrite.state === "building" && "Building…"}
         {contractWrite.state === "signing" && "Sign in Wallet…"}
         {contractWrite.state === "submitting" && "On Chain…"}
-        {contractWrite.state === "idle" && "Deposit XLM"}
+        {contractWrite.state === "idle" && "Deposit"}
         {contractWrite.state === "error" && "Try Again"}
       </button>
       {contractWrite.error && (

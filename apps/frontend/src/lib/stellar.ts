@@ -34,10 +34,9 @@ export const networkPassphrase = config.networkPassphrase;
 export const contractId =
   process.env.NEXT_PUBLIC_TIPAY_CONTRACT_ID || "";
 
-/** Native XLM SAC address. */
+/** USDC Stellar Asset Contract address. Override via NEXT_PUBLIC_TOKEN_SAC_ADDRESS. */
 export const tokenSacAddress =
-  process.env.NEXT_PUBLIC_TOKEN_SAC_ADDRESS ||
-  "CDMLFMKMMD7MWZP3FKUBZPVEGUJYXKAKHNBYJKPQXKTBBSBKKYRDQ7Y6";
+  process.env.NEXT_PUBLIC_TOKEN_SAC_ADDRESS || "";
 
 /** Returns the Horizon server instance (lazy singleton). */
 export function getHorizon(): StellarSdk.Horizon.Server {

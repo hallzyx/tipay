@@ -35,7 +35,7 @@ echo ""
 echo "📦 Building contract..."
 stellar contract build
 
-WASM="target/wasm32-unknown-unknown/release/contracts_soroban.wasm"
+WASM="target/wasm32v1-none/release/contracts_soroban.wasm"
 if [ ! -f "$WASM" ]; then
   echo "❌ Build failed — WASM not found at $WASM"
   exit 1

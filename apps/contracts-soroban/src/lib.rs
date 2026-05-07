@@ -78,6 +78,7 @@ pub struct FinalizedEvent {
     pub session_id: u64,
     pub absentee_count: u32,
     pub reward_per_attendee: i128,
+    pub fee: i128,
 }
 
 #[contractevent(topics = ["refunded"])]
@@ -394,8 +395,11 @@ impl TipayContract {
     ///   1. If NOT all deposited → refund depositors only.
     ///   2. Non-voters → auto-absent.
     ///   3. Voters with majority votes against them → absent.
-    ///   4. Pool absentee funds → split among attendees.
-    ///   5. No absentees or zero attendees → refund all.
+    ///   4. No absentees or zero attendees → refund all.
+    ///   5. Absentees present:
+    ///      - 10% of absentee pool → contract owner (fab fee).
+    ///      - 90% of absentee pool → split among attendees on
+    ///        top of their own deposit.
     ///
     /// @param caller     — anyone can call (no auth required)
     /// @param session_id — session to finalize
@@ -418,7 +422,6 @@ impl TipayContract {
 
         let all_addrs =
             Self::collect_participants(&env, session_id, session.participant_count);
-        let count = session.participant_count as usize;
         let amount = session.amount;
 
         let native_sac: Address = env
@@ -499,6 +502,7 @@ impl TipayContract {
 
         let absentee_count = absentees.len() as u32;
         let reward_per_attendee: i128;
+        let fee_collected: i128;
 
         if absentee_count == 0 || attendees.is_empty() {
             // No absentees or everyone absent → refund all
@@ -506,15 +510,44 @@ impl TipayContract {
                 token_client.transfer(&contract_addr, &addr, &amount);
             }
             reward_per_attendee = 0;
+            fee_collected = 0;
         } else {
-            // Pool ALL deposited funds, split among attendees
-            let total_pool = amount
-                .checked_mul(count as i128)
+            // ── Absentee pool and 10% fab fee ──
+            let absentee_pool = amount
+                .checked_mul(absentee_count as i128)
                 .ok_or(ContractError::TransferFailed)?;
-            let per_attendee = total_pool
+
+            // 10 % fee to contract owner
+            let fee = absentee_pool
+                .checked_mul(10)
+                .and_then(|v| v.checked_div(100))
+                .ok_or(ContractError::TransferFailed)?;
+
+            let owner: Address = env
+                .storage()
+                .instance()
+                .get(&DataKey::Owner)
+                .unwrap();
+            if fee > 0 {
+                token_client.transfer(&contract_addr, &owner, &fee);
+            }
+            fee_collected = fee;
+
+            // 90 % → bonus split among attendees (on top of deposit)
+            let attendee_pool = absentee_pool
+                .checked_sub(fee)
+                .ok_or(ContractError::TransferFailed)?;
+
+            let bonus_per_attendee = attendee_pool
                 .checked_div(attendees.len() as i128)
                 .ok_or(ContractError::TransferFailed)?;
+
+            let per_attendee = amount
+                .checked_add(bonus_per_attendee)
+                .ok_or(ContractError::TransferFailed)?;
+
             reward_per_attendee = per_attendee;
+
             for addr in &attendees {
                 token_client.transfer(&contract_addr, &addr, &per_attendee);
             }
@@ -529,6 +562,7 @@ impl TipayContract {
             session_id,
             absentee_count,
             reward_per_attendee,
+            fee: fee_collected,
         }
         .publish(&env);
 

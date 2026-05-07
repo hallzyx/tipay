@@ -7,11 +7,14 @@
 
 import { useState } from "react";
 import { useFreighter } from "@/hooks/useFreighter";
+import { useTokenBalance } from "@/hooks/useTokenBalance";
 import { shortAddress } from "@/lib/utils";
+import { tokenSacAddress } from "@/lib/stellar";
 import {
   Wallet,
   LogOut,
   Shield,
+  Coins,
   Zap,
   Menu,
   X,
@@ -19,6 +22,10 @@ import {
 
 export function Header() {
   const { connected, address, connect, disconnect } = useFreighter();
+  const { balance, loading: balLoading } = useTokenBalance(
+    address ?? null,
+    tokenSacAddress,
+  );
   const [showDropdown, setShowDropdown] = useState(false);
   const [connecting, setConnecting] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -56,7 +63,23 @@ export function Header() {
           </a>
 
           {connected && address ? (
-            <div className="relative">
+            <div className="flex items-center gap-3">
+              {/* Balance badge */}
+              <div className="flex items-center gap-2 px-3 py-2 border-2 border-black bg-white">
+                <Coins className="w-4 h-4 text-[#d73b19]" strokeWidth={3} />
+                <span className="text-xs font-black font-mono">
+                  {balLoading ? (
+                    <span className="text-gray-300">…</span>
+                  ) : balance !== null ? (
+                    balance + " USDC"
+                  ) : (
+                    <span className="text-gray-400">—</span>
+                  )}
+                </span>
+              </div>
+
+              {/* Wallet button */}
+              <div className="relative">
               <button
                 onClick={() => setShowDropdown(!showDropdown)}
                 className="flex items-center gap-3 px-4 py-2.5 border-2 border-black bg-white hover:bg-black hover:text-white transition-colors font-bold text-sm tracking-wide active:translate-x-0.5 active:translate-y-0.5"
@@ -90,6 +113,7 @@ export function Header() {
                   </button>
                 </div>
               )}
+            </div>
             </div>
           ) : (
             <button
@@ -125,6 +149,13 @@ export function Header() {
             </a>
             {connected && address ? (
               <div className="space-y-3 border-t-2 border-black pt-4">
+                {/* Mobile balance */}
+                <div className="flex items-center gap-2 px-3 py-2 border-2 border-black bg-white">
+                  <Coins className="w-4 h-4 text-[#d73b19]" strokeWidth={3} />
+                  <span className="text-xs font-black font-mono">
+                    {balLoading ? "…" : balance !== null ? balance + " USDC" : "—"}
+                  </span>
+                </div>
                 <p className="text-xs font-mono break-all">{address}</p>
                 <button
                   onClick={() => {

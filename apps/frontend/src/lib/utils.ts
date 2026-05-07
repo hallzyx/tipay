@@ -13,26 +13,28 @@ export function shortAddress(addr: string): string {
 }
 
 /**
- * Formats a stroop amount to XLM string.
- * 1 XLM = 10_000_000 stroops.
+ * Formats a stroop amount to a human-readable token amount.
+ * 1 token unit (USDC, XLM) = 10_000_000 stroops on Stellar.
  * @param stroops - Amount in stroops (number or bigint).
  * @param decimals - How many decimal places to show (default 2).
+ * @param symbol - Token symbol to append (default '').
  */
-export function formatXLM(
+export function formatStroops(
   stroops: number | bigint,
   decimals = 2,
+  symbol = "",
 ): string {
   const n = Number(stroops) / 10_000_000;
-  return n.toFixed(decimals);
+  return `${n.toFixed(decimals)}${symbol ? ` ${symbol}` : ""}`;
 }
 
 /**
- * Converts a user-facing XLM amount to stroops.
- * @param xlm - Amount in XLM (string or number).
+ * Converts a user-facing token amount to stroops.
+ * @param amount - Token amount (string or number).
  * @returns Amount in stroops as bigint.
  */
-export function xlmToStroops(xlm: string | number): bigint {
-  const n = typeof xlm === "string" ? parseFloat(xlm) : xlm;
+export function amountToStroops(amount: string | number): bigint {
+  const n = typeof amount === "string" ? parseFloat(amount) : amount;
   return BigInt(Math.round(n * 10_000_000));
 }
 

@@ -25,6 +25,7 @@ NETWORK="${STELLAR_NETWORK:-testnet}"
 SOURCE_IDENTITY="${STELLAR_SOURCE_IDENTITY:-alice}"
 CONTRACT_ID="${CONTRACT_ID:-}"
 TOKEN_SAC_ADDRESS="${TOKEN_SAC_ADDRESS:-}"
+OWNER_ADDRESS="${OWNER_ADDRESS:-}"
 
 if [ -z "$CONTRACT_ID" ]; then
   echo "❌ CONTRACT_ID not set."
@@ -34,17 +35,22 @@ fi
 
 if [ -z "$TOKEN_SAC_ADDRESS" ]; then
   echo "❌ TOKEN_SAC_ADDRESS not set."
-  echo "   For native XLM on testnet use:"
-  echo "   TOKEN_SAC_ADDRESS=CDMLFMKMMD7MWZP3FKUBZPVEGUJYXKAKHNBYJKPQXKTBBSBKKYRDQ7Y6"
+  echo "   Set the USDC Stellar Asset Contract address for your network."
   exit 1
 fi
 
+# Use explicit OWNER_ADDRESS if set, otherwise default to SOURCE_IDENTITY
+if [ -z "$OWNER_ADDRESS" ]; then
+  echo "⚠️  OWNER_ADDRESS not set — using SOURCE_IDENTITY (${SOURCE_IDENTITY}) as owner."
+  OWNER_ADDRESS="$SOURCE_IDENTITY"
+fi
+
 echo "==============================================="
-echo " Tipay — Initializing Contract"
+echo " Tipay — Initializing Contract (USDC)"
 echo "==============================================="
 echo " Contract ID:  ${CONTRACT_ID}"
 echo " Network:      ${NETWORK}"
-echo " Owner:        ${SOURCE_IDENTITY}"
+echo " Owner:        ${OWNER_ADDRESS}"
 echo " Token SAC:    ${TOKEN_SAC_ADDRESS}"
 echo ""
 
@@ -55,7 +61,7 @@ stellar contract invoke \
   --network "$NETWORK" \
   -- \
   initialize \
-  --owner "$SOURCE_IDENTITY" \
+  --owner "$OWNER_ADDRESS" \
   --token_sac "$TOKEN_SAC_ADDRESS"
 
 echo ""

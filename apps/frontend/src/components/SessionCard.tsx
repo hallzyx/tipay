@@ -7,7 +7,7 @@
 
 import Link from "next/link";
 import { StatusBadge, getSessionStatus } from "./StatusBadge";
-import { formatXLM, formatDate } from "@/lib/utils";
+import { formatStroops, formatDate } from "@/lib/utils";
 import { Users, Clock, Coins, Crown } from "lucide-react";
 
 interface SessionCardProps {
@@ -69,7 +69,7 @@ export function SessionCard({
           <div className="flex items-center gap-2">
             <Coins className="w-4 h-4 text-gray-400" strokeWidth={3} />
             <span className="text-sm font-black">
-              {formatXLM(amount)} XLM
+              {formatStroops(amount, 2, "USDC")}
             </span>
           </div>
           <div className="flex items-center gap-2">

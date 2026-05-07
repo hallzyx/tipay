@@ -50,7 +50,7 @@ export default function LandingPage() {
             {/* Tagline */}
             <p className="text-xl md:text-2xl font-bold uppercase leading-tight mb-12 max-w-2xl tracking-tight">
               Accountability sessions on Stellar.<br />
-              Deposit XLM. Vote absentees.<br />
+              Deposit USDC. Vote absentees.<br />
               Earn rewards.
             </p>
 
@@ -155,7 +155,7 @@ export default function LandingPage() {
               </h3>
             </div>
             <div className="p-8">
-              <span className="text-6xl md:text-7xl font-black block mb-2">XLM</span>
+              <span className="text-6xl md:text-7xl font-black block mb-2">USDC</span>
               <span className="text-lg font-bold uppercase text-[#d73b19] tracking-tight">
                 Stakes
               </span>
@@ -220,7 +220,7 @@ export default function LandingPage() {
                   Deposit
                 </h4>
                 <p className="text-sm uppercase relative z-10 leading-relaxed text-gray-600">
-                  Initialize a session by locking XLM. Set the rules of your accountability event with precision parameters.
+                  Initialize a session by locking USDC. Set the rules of your accountability event with precision parameters.
                 </p>
               </div>
 
