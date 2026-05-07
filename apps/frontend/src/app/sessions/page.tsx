@@ -153,7 +153,7 @@ export default function DashboardPage() {
         </div>
         <button
           onClick={() => setShowCreate(true)}
-          className="flex items-center gap-3 px-6 py-3 border-2 border-black bg-black text-white font-black text-sm uppercase tracking-[0.1em] hover:bg-[#d73b19] hover:border-[#d73b19] transition-all active:translate-x-0.5 active:translate-y-0.5 shadow-hard-sm"
+          className="flex items-center gap-3 px-6 py-3 border-2 border-black bg-[#d73b19] text-white font-black text-sm uppercase tracking-[0.1em] hover:bg-white hover:text-[#d73b19] transition-all active:translate-x-0.5 active:translate-y-0.5 shadow-hard-sm"
         >
           <Plus className="w-5 h-5" strokeWidth={3} />
           New Session
@@ -174,19 +174,20 @@ export default function DashboardPage() {
 
       {/* Stats bar */}
       <div className="grid grid-cols-3 gap-6 mb-16">
-        <div className="border-2 border-black p-8 text-center shadow-hard-sm">
+        
+        <div className="border-2 border-black p-8 text-center shadow-hard-sm bg-white">
+          <p className="text-4xl font-black mb-2 text-[#d73b19]">{activeSessions.length}</p>
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
+            Active
+          </p>
+        </div>
+        <div className="border-2 border-black p-8 text-center shadow-hard-sm bg-white">
           <p className="text-4xl font-black mb-2">{sessions.length}</p>
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
             Total Sessions
           </p>
         </div>
-        <div className="border-2 border-black p-8 text-center shadow-hard-sm">
-          <p className="text-4xl font-black mb-2">{activeSessions.length}</p>
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
-            Active
-          </p>
-        </div>
-        <div className="border-2 border-black p-8 text-center shadow-hard-sm">
+        <div className="border-2 border-black p-8 text-center shadow-hard-sm bg-white">
           <p className="text-4xl font-black mb-2">{pastSessions.length}</p>
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
             History
@@ -206,7 +207,7 @@ export default function DashboardPage() {
               {activeSessions.length} found
             </span>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 place-items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {activeSessions.map((s) => (
               <SessionCard
                 key={s.id}
@@ -239,7 +240,7 @@ export default function DashboardPage() {
               {pastSessions.length} found
             </span>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 place-items-center opacity-60">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 opacity-60">
             {pastSessions.map((s) => (
               <SessionCard
                 key={s.id}
@@ -262,7 +263,7 @@ export default function DashboardPage() {
 
       {/* Empty state */}
       {sessions.length === 0 && (
-        <div className="text-center py-20 border-2 border-dashed border-gray-300 max-w-xl mx-auto">
+        <div className="text-center py-20 border-2 border-dashed border-gray-300 max-w-xl mx-auto bg-white">
           <Users className="w-16 h-16 mx-auto mb-6 text-gray-300" strokeWidth={2} />
           <p className="text-xl font-black uppercase tracking-[0.1em] text-gray-400 mb-3">
             No Sessions Yet

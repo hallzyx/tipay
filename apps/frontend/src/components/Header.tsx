@@ -19,6 +19,7 @@ import {
   Zap,
   Menu,
   X,
+  Copy,
 } from "lucide-react";
 
 export function Header() {
@@ -86,9 +87,21 @@ export function Header() {
                     <p className="text-[10px] font-bold tracking-[0.2em] text-gray-500 uppercase mb-2">
                       Connected As
                     </p>
-                    <p className="text-sm font-mono break-all leading-relaxed mb-3">
-                      {address}
-                    </p>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-xs font-mono text-gray-500 tracking-wide">
+                        {shortAddress(address)}
+                      </span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigator.clipboard.writeText(address ?? "");
+                        }}
+                        className="p-1.5 border border-gray-300 hover:border-black hover:bg-gray-100 transition-colors"
+                        title="Copy address"
+                      >
+                        <Copy className="w-3.5 h-3.5" strokeWidth={3} />
+                      </button>
+                    </div>
                     {/* Balance inside dropdown */}
                     <div className="flex items-center gap-2 px-3 py-2 border-2 border-black bg-gray-50">
                       <Coins className="w-4 h-4 text-[#d73b19]" strokeWidth={3} />

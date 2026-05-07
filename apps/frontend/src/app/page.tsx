@@ -26,7 +26,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#F9F9F9]">
       {/* Hero Section */}
-      <section className="min-h-screen flex flex-col justify-center px-8 lg:px-16 xl:px-24 border-b-2 border-black relative">
+      <section className="min-h-screen flex flex-col justify-center px-8 lg:px-16 xl:px-24 border-b-2 border-black relative bg-grid">
         <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-12 py-20 pt-32">
           <div className="lg:col-span-8 flex flex-col justify-center">
             {/* Tags */}

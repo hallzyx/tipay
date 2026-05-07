@@ -170,7 +170,7 @@ export default function SessionDetailPage({
           Session #{id} doesn&apos;t exist.
         </p>
         <Link
-          href="/"
+          href="/sessions"
           className="inline-flex items-center gap-3 px-6 py-3 border-2 border-black font-bold text-sm uppercase tracking-[0.1em] hover:bg-black hover:text-white transition-all"
         >
           <ArrowLeft className="w-4 h-4" strokeWidth={3} />
@@ -205,7 +205,7 @@ export default function SessionDetailPage({
       {/* Back + Refresh */}
       <div className="flex items-center justify-between mb-10">
         <Link
-          href="/"
+          href="/sessions"
           className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] text-gray-500 hover:text-black transition-colors"
         >
           <ArrowLeft className="w-4 h-4" strokeWidth={3} />
@@ -224,7 +224,7 @@ export default function SessionDetailPage({
       </div>
 
       {/* Header card */}
-      <div className="border-2 border-black shadow-hard p-10 mb-10">
+      <div className="border-2 border-black shadow-hard p-10 mb-10 bg-white">
         <div className="flex items-center justify-between mb-8 pb-8 border-b-2 border-black">
           <div className="flex items-center gap-4">
             <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight">
@@ -239,28 +239,28 @@ export default function SessionDetailPage({
 
         {/* Stats 2x2 */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-          <div className="border-2 border-black p-6">
-            <Coins className="w-5 h-5 text-gray-400 mb-2" strokeWidth={3} />
+          <div className="border-2 border-black p-6 bg-white">
+            <Coins className="w-5 h-5  mb-2 text-[#d73b19]" strokeWidth={3} />
             <p className="text-2xl font-black">{formatStroops(session.amount)}</p>
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mt-1">USDC / Person</p>
           </div>
-          <div className="border-2 border-black p-6">
-            <Users className="w-5 h-5 text-gray-400 mb-2" strokeWidth={3} />
+          <div className="border-2 border-black p-6 bg-white">
+            <Users className="w-5 h-5 text-[#d73b19] mb-2" strokeWidth={3} />
             <p className="text-2xl font-black">
               {participants.filter((p) => p.deposited).length}/
               {session.participant_count}
             </p>
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mt-1">Deposited</p>
           </div>
-          <div className="border-2 border-black p-6">
-            <Clock className="w-5 h-5 text-gray-400 mb-2" strokeWidth={3} />
+          <div className="border-2 border-black p-6 bg-white">
+            <Clock className="w-5 h-5 text-[#d73b19] mb-2" strokeWidth={3} />
             <p className="text-sm font-black font-mono">
               {formatDate(session.deadline)}
             </p>
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mt-1">Event</p>
           </div>
-          <div className="border-2 border-black p-6">
-            <Clock className="w-5 h-5 text-gray-400 mb-2" strokeWidth={3} />
+          <div className="border-2 border-black p-6 bg-white">
+            <Clock className="w-5 h-5 text-[#d73b19] mb-2" strokeWidth={3} />
             <p className="text-sm font-black font-mono">
               {formatDate(BigInt(votingEnd))}
             </p>
@@ -283,7 +283,7 @@ export default function SessionDetailPage({
       </div>
 
       {/* Participants */}
-      <div className="border-2 border-black p-10 mb-10 shadow-hard-sm">
+      <div className="border-2 border-black p-10 mb-10 shadow-hard-sm bg-white">
         <h3 className="text-sm font-black uppercase tracking-[0.15em] mb-8 pb-6 border-b-2 border-black">
           Participants
         </h3>
@@ -361,7 +361,7 @@ export default function SessionDetailPage({
 
       {/* Finalize button */}
       {isVotingClosed && !session.finalized && (
-        <div className="border-2 border-black p-10 mb-10 shadow-hard-sm max-w-2xl mx-auto">
+        <div className="border-2 border-black p-10 mb-10 shadow-hard-sm max-w-2xl mx-auto bg-white">
           <div className="flex items-center gap-3 mb-4">
             <Lock className="w-6 h-6 text-gray-400" strokeWidth={3} />
             <span className="text-sm font-bold uppercase tracking-[0.15em] text-gray-500">
