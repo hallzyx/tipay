@@ -13,6 +13,7 @@ import {
   hasDeposited as hasDepositedFn,
 } from "@/hooks/useContract";
 import { useContractRead } from "@/hooks/useContract";
+import { useRefresh } from "@/contexts/refresh";
 import { formatStroops } from "@/lib/utils";
 import { ArrowDownToLine, Check } from "lucide-react";
 
@@ -34,6 +35,7 @@ export function DepositButton({
   const { address } = useFreighter();
   const contractWrite = useContractWrite();
   const { read } = useContractRead();
+  const { triggerBalanceRefresh } = useRefresh();
   const [alreadyDeposited, setAlreadyDeposited] = useState(false);
   const [checking, setChecking] = useState(true);
 
@@ -57,6 +59,7 @@ export function DepositButton({
     try {
       await depositTx(contractWrite, address, sessionId);
       setAlreadyDeposited(true);
+      triggerBalanceRefresh();
       onDeposited?.();
     } catch {
       // Error shown by hook

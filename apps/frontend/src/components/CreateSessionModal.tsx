@@ -8,6 +8,7 @@
 import { useState, useEffect } from "react";
 import { useFreighter } from "@/hooks/useFreighter";
 import { useContractWrite, createSession as createSessionTx } from "@/hooks/useContract";
+import { useRefresh } from "@/contexts/refresh";
 import { Coins, Calendar, Clock, Users, Plus, Trash2, X } from "lucide-react";
 
 interface CreateSessionModalProps {
@@ -27,6 +28,7 @@ export function CreateSessionModal({
 }: CreateSessionModalProps) {
   const { address } = useFreighter();
   const contractWrite = useContractWrite();
+  const { triggerBalanceRefresh, triggerSessionRefresh } = useRefresh();
 
   const [amount, setAmount] = useState("");
   const [eventDate, setEventDate] = useState("");
@@ -48,9 +50,11 @@ export function CreateSessionModal({
     }
   }, [open]);
 
-  // Close on success
+  // Close on success + refresh balance and sessions
   useEffect(() => {
     if (contractWrite.state === "success") {
+      triggerBalanceRefresh();
+      triggerSessionRefresh();
       const t = setTimeout(() => {
         onClose();
         onSuccess?.();

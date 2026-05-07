@@ -6,6 +6,7 @@
 
 import { use, useState, useEffect } from "react";
 import { useFreighter } from "@/hooks/useFreighter";
+import { useRefresh } from "@/contexts/refresh";
 import {
   useContractRead,
   useContractWrite,
@@ -37,6 +38,7 @@ import {
   Copy,
   Lock,
   Zap,
+  RotateCw,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -59,6 +61,8 @@ export default function SessionDetailPage({
   const { address } = useFreighter();
   const { read } = useContractRead(address ?? undefined);
   const contractWrite = useContractWrite();
+  const { triggerBalanceRefresh } = useRefresh();
+  const [sessionRefreshKey, setSessionRefreshKey] = useState(0);
 
   const [session, setSession] = useState<{
     host: string;
@@ -121,11 +125,12 @@ export default function SessionDetailPage({
     };
 
     load();
-  }, [sessionId, address, read]);
+  }, [sessionId, address, read, sessionRefreshKey]);
 
   const handleFinalize = async () => {
     try {
       await finalizeSessionTx(contractWrite, sessionId);
+      triggerBalanceRefresh();
       // Refresh
       const s = await getSessionFn(read, sessionId);
       if (s) setSession(s);
@@ -197,14 +202,26 @@ export default function SessionDetailPage({
 
   return (
     <div className="w-full px-8 lg:px-16 xl:px-24 pt-28 pb-16">
-      {/* Back */}
-      <Link
-        href="/"
-        className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] text-gray-500 hover:text-black mb-10 transition-colors"
-      >
-        <ArrowLeft className="w-4 h-4" strokeWidth={3} />
-        Back to Sessions
-      </Link>
+      {/* Back + Refresh */}
+      <div className="flex items-center justify-between mb-10">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] text-gray-500 hover:text-black transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" strokeWidth={3} />
+          Back to Sessions
+        </Link>
+        <button
+          onClick={() => {
+            triggerBalanceRefresh();
+            setSessionRefreshKey((k) => k + 1);
+          }}
+          className="flex items-center gap-2 px-4 py-2 border-2 border-black hover:bg-gray-100 transition-all active:translate-x-0.5 active:translate-y-0.5"
+          title="Refresh data"
+        >
+          <RotateCw className="w-4 h-4" strokeWidth={3} />
+        </button>
+      </div>
 
       {/* Header card */}
       <div className="border-2 border-black shadow-hard p-10 mb-10">

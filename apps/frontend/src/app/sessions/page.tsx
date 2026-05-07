@@ -1,13 +1,14 @@
 /**
  * Tipay Dashboard — session grid with wallet connection.
  * Brutalist design — black/white/orange, hard shadows.
- * @module app/dashboard/page
+ * @module app/sessions/page
  */
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { useFreighter } from "@/hooks/useFreighter";
 import { useContractRead } from "@/hooks/useContract";
+import { useRefresh } from "@/contexts/refresh";
 import {
   getSessionCount,
   getSession,
@@ -18,7 +19,7 @@ import { SessionCard } from "@/components/SessionCard";
 import { CreateSessionModal } from "@/components/CreateSessionModal";
 import { StatusBadge, getSessionStatus } from "@/components/StatusBadge";
 import { shortAddress } from "@/lib/utils";
-import { Plus, Zap, Users, Shield, ArrowRight } from "lucide-react";
+import { Plus, Zap, Users, Shield, ArrowRight, RotateCw } from "lucide-react";
 
 interface SessionSummary {
   id: number;
@@ -35,6 +36,7 @@ interface SessionSummary {
 export default function DashboardPage() {
   const { connected, address } = useFreighter();
   const { read } = useContractRead(address ?? undefined);
+  const { triggerBalanceRefresh } = useRefresh();
 
   const [sessions, setSessions] = useState<SessionSummary[]>([]);
   const [loading, setLoading] = useState(true);
@@ -127,15 +129,27 @@ export default function DashboardPage() {
     <div className="w-full px-8 lg:px-16 xl:px-24 pt-28 pb-16">
       {/* Header */}
       <div className="flex items-center justify-between mb-12 pb-8 border-b-2 border-black">
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
-              Connected Wallet
+        <div className="flex items-center gap-6">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
+                Connected Wallet
+              </span>
+            </div>
+            <span className="text-sm font-mono tracking-wide">
+              {address ? shortAddress(address) : "Not connected"}
             </span>
           </div>
-          <span className="text-sm font-mono tracking-wide">
-            {address ? shortAddress(address) : "Not connected"}
-          </span>
+          <button
+            onClick={() => {
+              triggerBalanceRefresh();
+              setRefreshKey((k) => k + 1);
+            }}
+            className="flex items-center gap-2 px-4 py-3 border-2 border-black hover:bg-gray-100 transition-all active:translate-x-0.5 active:translate-y-0.5"
+            title="Refresh data"
+          >
+            <RotateCw className="w-4 h-4" strokeWidth={3} />
+          </button>
         </div>
         <button
           onClick={() => setShowCreate(true)}

@@ -4,11 +4,11 @@
 "use client";
 
 import { ReactNode } from "react";
+import { RefreshProvider } from "@/contexts/refresh";
 
 /**
  * Wrap children with global context providers.
- * Currently no providers needed — Stellar uses direct wallet API.
  */
 export function Providers({ children }: { children: ReactNode }) {
-  return <>{children}</>;
+  return <RefreshProvider>{children}</RefreshProvider>;
 }

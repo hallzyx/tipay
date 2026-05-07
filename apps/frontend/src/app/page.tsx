@@ -56,14 +56,7 @@ export default function LandingPage() {
 
             {/* CTAs */}
             <div className="flex gap-4 flex-wrap">
-              {connected ? (
-                <Link
-                  href="/dashboard"
-                  className="bg-black text-white px-10 py-4 border-2 border-black text-lg font-black uppercase tracking-[0.05em] hover:shadow-[8px_8px_0px_0px_#d73b19] hover:-translate-y-1 transition-all duration-100 active:translate-y-0 active:shadow-none"
-                >
-                  Go to Dashboard
-                </Link>
-              ) : (
+              {!connected && (
                 <button
                   onClick={connect}
                   className="bg-black text-white px-10 py-4 border-2 border-black text-lg font-black uppercase tracking-[0.05em] hover:shadow-[8px_8px_0px_0px_#d73b19] hover:-translate-y-1 transition-all duration-100 active:translate-y-0 active:shadow-none flex items-center gap-3"
@@ -73,10 +66,10 @@ export default function LandingPage() {
                 </button>
               )}
               <Link
-                href="/dashboard"
+                href="/sessions"
                 className="bg-[#F9F9F9] text-black px-10 py-4 border-2 border-black text-lg font-black uppercase tracking-[0.05em] hover:shadow-[8px_8px_0px_0px_#000000] hover:-translate-y-1 transition-all duration-100 active:translate-y-0 active:shadow-none"
               >
-                View Dashboard
+                Start Now
               </Link>
             </div>
           </div>
@@ -85,6 +78,7 @@ export default function LandingPage() {
           <div className="lg:col-span-4 hidden lg:block border-2 border-black shadow-[16px_16px_0px_0px_#d73b19] bg-white p-3">
             <div className="w-full h-full border-2 border-black bg-black flex items-center justify-center">
               <Terminal className="w-32 h-32 text-[#d73b19]" strokeWidth={1.5} />
+              <p className="text-8xl text-[#d73b19] pb-5">0</p>
             </div>
           </div>
         </div>
@@ -267,15 +261,15 @@ export default function LandingPage() {
         </div>
 
         <h2 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase mb-12 relative z-10 tracking-tighter">
-          Ready for Protocol?
+          Are you ready?
         </h2>
 
         {connected ? (
           <Link
-            href="/dashboard"
+            href="/sessions"
             className="bg-black text-white px-16 py-6 border-4 border-black text-xl md:text-2xl font-black uppercase hover:bg-white hover:text-black hover:shadow-[12px_12px_0px_0px_#000000] transition-all active:translate-y-2 active:shadow-none relative z-10"
           >
-            Enter Dashboard
+            Go!
           </Link>
         ) : (
           <button

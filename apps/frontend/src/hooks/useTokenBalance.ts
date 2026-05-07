@@ -12,12 +12,13 @@ import { addressToScVal } from "@/lib/contract";
 
 /**
  * Hook that fetches and returns the token balance for a given wallet address.
- * Polls every `pollInterval` ms. Set to 0 to disable polling.
+ * Re-fetches whenever `refreshKey` changes — useful for triggering after
+ * deposit / withdrawal transactions.
  */
 export function useTokenBalance(
   walletAddress: string | null,
   tokenSacAddress: string,
-  pollInterval = 15_000,
+  refreshKey = 0,
 ) {
   const [balance, setBalance] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -62,8 +63,8 @@ export function useTokenBalance(
 
       // SAC balance returns i128 → scValToNative gives bigint
       const rawBalance = StellarSdk.scValToNative(sim.result.retval) as bigint;
-      const xlmVal = Number(rawBalance) / 10_000_000;
-      setBalance(xlmVal.toFixed(2));
+      const tokenVal = Number(rawBalance) / 10_000_000;
+      setBalance(tokenVal.toFixed(2));
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Balance fetch failed";
       setError(msg);
@@ -72,17 +73,10 @@ export function useTokenBalance(
     }
   }, [walletAddress, tokenSacAddress]);
 
-  // Initial fetch
+  // Fetch on mount, and whenever refreshKey changes
   useEffect(() => {
     fetchBalance();
-  }, [fetchBalance]);
-
-  // Polling
-  useEffect(() => {
-    if (!pollInterval || pollInterval <= 0) return;
-    const iv = setInterval(fetchBalance, pollInterval);
-    return () => clearInterval(iv);
-  }, [fetchBalance, pollInterval]);
+  }, [fetchBalance, refreshKey]);
 
   return { balance, loading, error, refetch: fetchBalance };
 }

@@ -8,6 +8,7 @@
 import { useState } from "react";
 import { useFreighter } from "@/hooks/useFreighter";
 import { useTokenBalance } from "@/hooks/useTokenBalance";
+import { useRefresh } from "@/contexts/refresh";
 import { shortAddress } from "@/lib/utils";
 import { tokenSacAddress } from "@/lib/stellar";
 import {
@@ -22,9 +23,11 @@ import {
 
 export function Header() {
   const { connected, address, connect, disconnect } = useFreighter();
+  const { balanceKey } = useRefresh();
   const { balance, loading: balLoading } = useTokenBalance(
     address ?? null,
     tokenSacAddress,
+    balanceKey,
   );
   const [showDropdown, setShowDropdown] = useState(false);
   const [connecting, setConnecting] = useState(false);
@@ -56,7 +59,7 @@ export function Header() {
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-8">
           <a
-            href="/"
+            href="/sessions"
             className="text-sm font-bold uppercase tracking-[0.15em] hover:text-[#d73b19] transition-colors"
           >
             Sessions
@@ -64,20 +67,6 @@ export function Header() {
 
           {connected && address ? (
             <div className="flex items-center gap-3">
-              {/* Balance badge */}
-              <div className="flex items-center gap-2 px-3 py-2 border-2 border-black bg-white">
-                <Coins className="w-4 h-4 text-[#d73b19]" strokeWidth={3} />
-                <span className="text-xs font-black font-mono">
-                  {balLoading ? (
-                    <span className="text-gray-300">…</span>
-                  ) : balance !== null ? (
-                    balance + " USDC"
-                  ) : (
-                    <span className="text-gray-400">—</span>
-                  )}
-                </span>
-              </div>
-
               {/* Wallet button */}
               <div className="relative">
               <button
@@ -97,9 +86,22 @@ export function Header() {
                     <p className="text-[10px] font-bold tracking-[0.2em] text-gray-500 uppercase mb-2">
                       Connected As
                     </p>
-                    <p className="text-sm font-mono break-all leading-relaxed">
+                    <p className="text-sm font-mono break-all leading-relaxed mb-3">
                       {address}
                     </p>
+                    {/* Balance inside dropdown */}
+                    <div className="flex items-center gap-2 px-3 py-2 border-2 border-black bg-gray-50">
+                      <Coins className="w-4 h-4 text-[#d73b19]" strokeWidth={3} />
+                      <span className="text-xs font-black font-mono">
+                        {balLoading ? (
+                          <span className="text-gray-300">…</span>
+                        ) : balance !== null ? (
+                          balance + " USDC"
+                        ) : (
+                          <span className="text-gray-400">—</span>
+                        )}
+                      </span>
+                    </div>
                   </div>
                   <button
                     onClick={() => {
@@ -141,7 +143,7 @@ export function Header() {
         <div className="md:hidden border-t-2 border-black bg-white animate-slide-up">
           <div className="p-6 space-y-4">
             <a
-              href="/"
+              href="/sessions"
               className="block text-sm font-bold uppercase tracking-[0.15em] hover:text-[#d73b19]"
               onClick={() => setMobileOpen(false)}
             >
