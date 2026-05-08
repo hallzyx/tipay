@@ -8,6 +8,7 @@
 import Link from "next/link";
 import { StatusBadge, getSessionStatus } from "./StatusBadge";
 import { formatStroops, formatDate } from "@/lib/utils";
+import { useLanguage } from "@/contexts/language";
 import { Users, Clock, Coins, Crown } from "lucide-react";
 
 interface SessionCardProps {
@@ -39,6 +40,7 @@ export function SessionCard({
   depositedCount,
   isHost,
 }: SessionCardProps) {
+  const { t } = useLanguage();
   const now = BigInt(Math.floor(Date.now() / 1000));
   const votingDeadline = deadline + votingPeriod;
   const status = getSessionStatus({ active, finalized, deadline, votingDeadline });

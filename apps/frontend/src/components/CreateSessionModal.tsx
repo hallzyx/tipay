@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { useFreighter } from "@/hooks/useFreighter";
 import { useContractWrite, createSession as createSessionTx } from "@/hooks/useContract";
 import { useRefresh } from "@/contexts/refresh";
+import { useLanguage } from "@/contexts/language";
 import { Coins, Calendar, Clock, Users, Plus, Trash2, X } from "lucide-react";
 
 interface CreateSessionModalProps {
@@ -29,6 +30,7 @@ export function CreateSessionModal({
   const { address } = useFreighter();
   const contractWrite = useContractWrite();
   const { triggerBalanceRefresh, triggerSessionRefresh } = useRefresh();
+  const { t } = useLanguage();
 
   const [amount, setAmount] = useState("");
   const [eventDate, setEventDate] = useState("");
@@ -84,15 +86,15 @@ export function CreateSessionModal({
 
     // Validate
     if (!address) {
-      setError("Connect your wallet first");
+      setError(t("modal.error.connectWallet"));
       return;
     }
     if (!amount || parseFloat(amount) <= 0) {
-      setError("Enter an amount greater than 0");
+      setError(t("modal.error.amount"));
       return;
     }
     if (!eventDate || !eventTime) {
-      setError("Set a date and time for the event");
+      setError(t("modal.error.date"));
       return;
     }
 
@@ -100,17 +102,17 @@ export function CreateSessionModal({
       new Date(`${eventDate}T${eventTime}`).getTime() / 1000,
     );
     if (deadline <= Date.now() / 1000) {
-      setError("The event must be in the future");
+      setError(t("modal.error.future"));
       return;
     }
 
     const allParticipants = [address, ...friends.filter(Boolean)];
     if (allParticipants.length < 3) {
-      setError("You need at least 2 more friends (3 total)");
+      setError(t("modal.error.minFriends"));
       return;
     }
     if (allParticipants.length > 5) {
-      setError("Maximum 5 participants total");
+      setError(t("modal.error.maxFriends"));
       return;
     }
 
@@ -139,7 +141,7 @@ export function CreateSessionModal({
         {/* Header */}
         <div className="flex items-center justify-between p-8 border-b-2 border-black">
           <h2 className="text-xl font-black uppercase tracking-tight">
-            New Session
+            {t("modal.title")}
           </h2>
           <button
             onClick={onClose}
@@ -155,7 +157,7 @@ export function CreateSessionModal({
           <div>
             <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] mb-3">
               <Coins className="w-4 h-4" strokeWidth={3} />
-               Amount Per Person (USDC)
+               {t("modal.amount")}
             </label>
             <input
               type="number"
@@ -163,7 +165,7 @@ export function CreateSessionModal({
               step="0.01"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder="1.00"
+              placeholder={t("modal.amountPlaceholder")}
               className="w-full px-4 py-3 border-2 border-black font-mono text-sm focus:outline-none focus:border-[#d73b19] transition-colors"
             />
           </div>
@@ -173,7 +175,7 @@ export function CreateSessionModal({
             <div>
               <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] mb-3">
                 <Calendar className="w-4 h-4" strokeWidth={3} />
-                Date
+                {t("modal.date")}
               </label>
               <input
                 type="date"
@@ -185,7 +187,7 @@ export function CreateSessionModal({
             <div>
               <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] mb-3">
                 <Clock className="w-4 h-4" strokeWidth={3} />
-                Time
+                {t("modal.time")}
               </label>
               <input
                 type="time"
@@ -200,7 +202,7 @@ export function CreateSessionModal({
           <div>
             <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] mb-3">
               <Clock className="w-4 h-4" strokeWidth={3} />
-              Voting Window (Minutes)
+              {t("modal.votingWindow")}
             </label>
             <input
               type="number"
@@ -215,12 +217,12 @@ export function CreateSessionModal({
           <div>
             <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] mb-3">
               <Users className="w-4 h-4" strokeWidth={3} />
-              Participants
+              {t("modal.participants")}
             </label>
 
             {/* Host (you) */}
             <div className="flex items-center gap-3 px-4 py-3 border-2 border-black bg-gray-50 mb-3">
-              <span className="text-[10px] font-bold text-[#d73b19] uppercase tracking-widest">Host</span>
+              <span className="text-[10px] font-bold text-[#d73b19] uppercase tracking-widest">{t("modal.host")}</span>
               <span className="text-xs font-mono truncate">{address}</span>
             </div>
 
@@ -231,7 +233,7 @@ export function CreateSessionModal({
                   type="text"
                   value={friend}
                   onChange={(e) => updateFriend(i, e.target.value)}
-                  placeholder={`Friend ${i + 1} (G...)`}
+                  placeholder={t("modal.friendPlaceholder").replace("{n}", String(i + 1))}
                   className="flex-1 px-4 py-3 border-2 border-black font-mono text-xs focus:outline-none focus:border-[#d73b19] transition-colors"
                 />
                 <button
@@ -251,7 +253,7 @@ export function CreateSessionModal({
                 className="flex items-center gap-2 px-4 py-3 border-2 border-dashed border-gray-400 text-xs font-bold uppercase tracking-[0.1em] hover:border-black hover:bg-gray-50 transition-colors w-full"
               >
                 <Plus className="w-4 h-4" strokeWidth={3} />
-                Add Friend
+                {t("modal.addFriend")}
               </button>
             )}
           </div>
@@ -278,12 +280,12 @@ export function CreateSessionModal({
             disabled={isPending}
             className="w-full py-4 border-2 border-black bg-[#d73b19] text-white font-black text-sm uppercase tracking-[0.1em] hover:bg-black transition-all active:translate-x-0.5 active:translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed shadow-hard-sm"
           >
-            {contractWrite.state === "building" && "Building…"}
-            {contractWrite.state === "signing" && "Sign in Wallet…"}
-            {contractWrite.state === "submitting" && "On Chain…"}
-            {contractWrite.state === "success" && "✓ Created!"}
-            {contractWrite.state === "idle" && "Create Session"}
-            {contractWrite.state === "error" && "Try Again"}
+            {contractWrite.state === "building" && t("modal.building")}
+            {contractWrite.state === "signing" && t("modal.signing")}
+            {contractWrite.state === "submitting" && t("modal.submitting")}
+            {contractWrite.state === "success" && t("modal.created")}
+            {contractWrite.state === "idle" && t("modal.create")}
+            {contractWrite.state === "error" && t("modal.tryAgain")}
           </button>
         </form>
       </div>

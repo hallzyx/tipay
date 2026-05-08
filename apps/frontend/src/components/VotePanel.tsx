@@ -14,6 +14,7 @@ import {
   hasVoted as hasVotedFn,
 } from "@/hooks/useContract";
 import { shortAddress, formatDuration } from "@/lib/utils";
+import { useLanguage } from "@/contexts/language";
 import { CheckCircle, Vote, Clock } from "lucide-react";
 
 interface VotePanelProps {
@@ -38,6 +39,7 @@ export function VotePanel({
   const { address } = useFreighter();
   const contractWrite = useContractWrite();
   const { read } = useContractRead();
+  const { t } = useLanguage();
 
   const [alreadyVoted, setAlreadyVoted] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
@@ -106,7 +108,7 @@ export function VotePanel({
       <div className="flex items-center gap-3 border-2 border-black bg-black text-white p-6 shadow-hard-sm">
         <CheckCircle className="w-6 h-6" strokeWidth={3} />
         <span className="text-sm font-bold uppercase tracking-[0.1em]">
-          Vote Cast
+          {t("vote.alreadyVoted")}
         </span>
       </div>
     );
@@ -123,11 +125,11 @@ export function VotePanel({
         <div className="flex items-center gap-3">
           <Vote className="w-5 h-5 text-[#d73b19]" strokeWidth={3} />
           <h3 className="text-sm font-black uppercase tracking-[0.15em]">
-            Vote Absent
+            {t("vote.title")}
           </h3>
         </div>
         <span className="text-xs font-mono text-gray-500">
-          {formatDuration(timeLeft)} Left
+          {t("vote.voteEnds").replace("{time}", formatDuration(timeLeft))}
         </span>
       </div>
 
@@ -161,7 +163,7 @@ export function VotePanel({
         {contractWrite.state === "signing" && "Sign in Wallet…"}
         {contractWrite.state === "submitting" && "On Chain…"}
         {(contractWrite.state === "idle" || contractWrite.state === "error") &&
-          "Confirm Vote"}
+          t("vote.cast")}
       </button>
 
       {contractWrite.error && (

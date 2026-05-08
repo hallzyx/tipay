@@ -6,6 +6,7 @@
 "use client";
 
 import { useFreighter } from "@/hooks/useFreighter";
+import { useLanguage } from "@/contexts/language";
 import Link from "next/link";
 import {
   Zap,
@@ -22,6 +23,7 @@ import {
 
 export default function LandingPage() {
   const { connect, connected } = useFreighter();
+  const { t } = useLanguage();
 
   return (
     <div className="min-h-screen bg-[#F9F9F9]">
@@ -32,10 +34,10 @@ export default function LandingPage() {
             {/* Tags */}
             <div className="flex gap-4 mb-8">
               <span className="inline-block border-2 border-black px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] bg-[#F9F9F9] shadow-[2px_2px_0px_0px_#000000]">
-                Built on Stellar
+                {t("landing.tag.builtOn")}
               </span>
               <span className="inline-block border-2 border-black px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] bg-[#d73b19] text-white shadow-[2px_2px_0px_0px_#000000]">
-                Secured by Soroban
+                {t("landing.tag.securedBy")}
               </span>
             </div>
 
@@ -49,9 +51,9 @@ export default function LandingPage() {
 
             {/* Tagline */}
             <p className="text-xl md:text-2xl font-bold uppercase leading-tight mb-12 max-w-2xl tracking-tight">
-              Accountability sessions on Stellar.<br />
-              Deposit USDC. Vote absentees.<br />
-              Earn rewards.
+              {t("landing.tagline.line1")}<br />
+              {t("landing.tagline.line2")}<br />
+              {t("landing.tagline.line3")}
             </p>
 
             {/* CTAs */}
@@ -62,14 +64,14 @@ export default function LandingPage() {
                   className="bg-black text-white px-10 py-4 border-2 border-black text-lg font-black uppercase tracking-[0.05em] hover:shadow-[8px_8px_0px_0px_#d73b19] hover:-translate-y-1 transition-all duration-100 active:translate-y-0 active:shadow-none flex items-center gap-3"
                 >
                   <Wallet className="w-5 h-5" strokeWidth={3} />
-                  Connect Wallet
+                  {t("landing.cta.connectWallet")}
                 </button>
               )}
               <Link
                 href="/sessions"
                 className="bg-[#F9F9F9] text-black px-10 py-4 border-2 border-black text-lg font-black uppercase tracking-[0.05em] hover:shadow-[8px_8px_0px_0px_#000000] hover:-translate-y-1 transition-all duration-100 active:translate-y-0 active:shadow-none"
               >
-                Start Now
+                {t("landing.cta.startNow")}
               </Link>
             </div>
           </div>
@@ -88,7 +90,7 @@ export default function LandingPage() {
       <section className="px-8 lg:px-16 xl:px-24 py-24 border-b-2 border-black bg-white">
         <div className="mb-16 border-b-4 border-black pb-4 inline-block">
           <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight">
-            Core System
+            {t("landing.section.coreSystem")}
           </h2>
         </div>
 
@@ -96,30 +98,30 @@ export default function LandingPage() {
           <div className="border-2 border-black p-8 bg-[#F9F9F9] shadow-[8px_8px_0px_0px_#000000] hover:shadow-[8px_8px_0px_0px_#d73b19] transition-all">
             <FileCode className="w-12 h-12 mb-6 text-[#d73b19]" strokeWidth={2} />
             <h3 className="text-xl font-black uppercase mb-4 tracking-tight">
-              Soroban Smart Contracts
+              {t("landing.feature.soroban")}
             </h3>
             <p className="text-sm uppercase text-gray-600 leading-relaxed">
-              Trustless automation on Stellar. Locks and distributes funds based on strict algorithmic parameters.
+              {t("landing.feature.sorobanDesc")}
             </p>
           </div>
 
           <div className="border-2 border-black p-8 bg-[#F9F9F9] shadow-[8px_8px_0px_0px_#000000] hover:shadow-[8px_8px_0px_0px_#d73b19] transition-all">
             <Coins className="w-12 h-12 mb-6 text-[#d73b19]" strokeWidth={2} />
             <h3 className="text-xl font-black uppercase mb-4 tracking-tight">
-              Low Fees
+              {t("landing.feature.lowFees")}
             </h3>
             <p className="text-sm uppercase text-gray-600 leading-relaxed">
-              Minimal network costs. Keep more of your stake and rewards thanks to the highly efficient Stellar network.
+              {t("landing.feature.lowFeesDesc")}
             </p>
           </div>
 
           <div className="border-2 border-black p-8 bg-[#F9F9F9] shadow-[8px_8px_0px_0px_#000000] hover:shadow-[8px_8px_0px_0px_#d73b19] transition-all">
             <Vote className="w-12 h-12 mb-6 text-[#d73b19]" strokeWidth={2} />
             <h3 className="text-xl font-black uppercase mb-4 tracking-tight">
-              Transparent Voting
+              {t("landing.feature.voting")}
             </h3>
             <p className="text-sm uppercase text-gray-600 leading-relaxed">
-              On-chain verifiable absence. Peer consensus mechanism ensures accurate penalty application.
+              {t("landing.feature.votingDesc")}
             </p>
           </div>
         </div>
@@ -131,13 +133,13 @@ export default function LandingPage() {
           <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_#000000] hover:shadow-[8px_8px_0px_0px_#d73b19] transition-all">
             <div className="bg-black text-white p-4 border-b-2 border-black">
               <h3 className="text-[10px] font-bold uppercase tracking-[0.2em]">
-                Network Metric 01
+                {t("landing.networkMetric01")}
               </h3>
             </div>
             <div className="p-8">
               <span className="text-6xl md:text-7xl font-black block mb-2">3+</span>
               <span className="text-lg font-bold uppercase text-[#d73b19] tracking-tight">
-                Players
+                {t("landing.metric.players")}
               </span>
             </div>
           </div>
@@ -145,13 +147,13 @@ export default function LandingPage() {
           <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_#000000] hover:shadow-[8px_8px_0px_0px_#d73b19] transition-all">
             <div className="bg-black text-white p-4 border-b-2 border-black">
               <h3 className="text-[10px] font-bold uppercase tracking-[0.2em]">
-                Network Metric 02
+                {t("landing.networkMetric02")}
               </h3>
             </div>
             <div className="p-8">
               <span className="text-6xl md:text-7xl font-black block mb-2">USDC</span>
               <span className="text-lg font-bold uppercase text-[#d73b19] tracking-tight">
-                Stakes
+                {t("landing.metric.stakes")}
               </span>
             </div>
           </div>
@@ -159,13 +161,13 @@ export default function LandingPage() {
           <div className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_#000000] hover:shadow-[8px_8px_0px_0px_#d73b19] transition-all">
             <div className="bg-black text-white p-4 border-b-2 border-black">
               <h3 className="text-[10px] font-bold uppercase tracking-[0.2em]">
-                Network Metric 03
+                {t("landing.networkMetric03")}
               </h3>
             </div>
             <div className="p-8">
               <span className="text-6xl md:text-7xl font-black block mb-2">100%</span>
               <span className="text-lg font-bold uppercase text-[#d73b19] tracking-tight">
-                On-chain
+                {t("landing.metric.onchain")}
               </span>
             </div>
           </div>
@@ -176,7 +178,7 @@ export default function LandingPage() {
       <section className="px-8 lg:px-16 xl:px-24 py-24 bg-white border-b-2 border-black">
         <div className="mb-16 border-b-4 border-black pb-4 inline-block">
           <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight">
-            Protocol Flow
+            {t("landing.section.protocolFlow")}
           </h2>
         </div>
 
@@ -184,7 +186,7 @@ export default function LandingPage() {
           {/* Left panel */}
           <div className="lg:col-span-5 p-10 lg:p-12 border-b-2 lg:border-b-0 lg:border-r-2 border-black bg-[#d73b19] text-white">
             <h2 className="text-3xl md:text-4xl font-black uppercase mb-8 tracking-tight">
-              Immutable Accountability
+              {t("landing.immutable")}
             </h2>
             <p className="text-lg uppercase mb-8 leading-relaxed">
               The TIPAY protocol enforces social contracts via financial stakes. Every deposit is locked in a Soroban smart contract until the session parameters are met or failed.
@@ -211,10 +213,10 @@ export default function LandingPage() {
               <div className="border-2 border-black p-6 bg-white relative">
                 <span className="absolute -top-4 -left-4 text-5xl font-black text-[#d73b19]/20">01</span>
                 <h4 className="font-black text-xl mb-4 uppercase border-b-2 border-black inline-block relative z-10 pb-1">
-                  Deposit
+                  {t("landing.feature.deposit.title")}
                 </h4>
                 <p className="text-sm uppercase relative z-10 leading-relaxed text-gray-600">
-                  Initialize a session by locking USDC. Set the rules of your accountability event with precision parameters.
+                  {t("landing.feature.deposit.desc")}
                 </p>
               </div>
 
@@ -261,7 +263,7 @@ export default function LandingPage() {
         </div>
 
         <h2 className="text-5xl md:text-7xl lg:text-8xl font-black uppercase mb-12 relative z-10 tracking-tighter">
-          Are you ready?
+          {t("landing.cta.ready")}
         </h2>
 
         {connected ? (
@@ -277,7 +279,7 @@ export default function LandingPage() {
             className="bg-black text-white px-16 py-6 border-4 border-black text-xl md:text-2xl font-black uppercase hover:bg-white hover:text-black hover:shadow-[12px_12px_0px_0px_#000000] transition-all active:translate-y-2 active:shadow-none relative z-10 flex items-center gap-4"
           >
             <Wallet className="w-6 h-6" strokeWidth={3} />
-            Connect Wallet Now
+            {t("landing.cta.connectNow")}
           </button>
         )}
       </section>
@@ -288,7 +290,7 @@ export default function LandingPage() {
           <div className="flex flex-col gap-2">
             <span className="text-xl font-black text-[#d73b19] uppercase tracking-tight">Tipay</span>
             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
-              Tipay Protocol v1.0 — Stellar Network
+              {t("landing.footer")}
             </span>
           </div>
 
@@ -305,7 +307,7 @@ export default function LandingPage() {
           </div>
 
           <div className="text-gray-500 text-[10px] font-bold uppercase tracking-[0.2em]">
-            &copy; 2024 Tipay Systems
+            &copy; 2026 Tipay Systems
           </div>
         </div>
       </footer>

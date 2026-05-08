@@ -2,6 +2,9 @@
  * Session status badge with brutalist styling.
  * @module components/StatusBadge
  */
+"use client";
+
+import { useLanguage } from "@/contexts/language";
 
 export type SessionStatus =
   | "waiting"
@@ -18,33 +21,33 @@ interface StatusBadgeProps {
 
 const statusConfig: Record<
   SessionStatus,
-  { label: string; className: string }
+  { labelKey: string; className: string }
 > = {
   waiting: {
-    label: "WAITING",
+    labelKey: "status.waiting",
     className:
       "bg-black text-white border-2 border-black",
   },
   active: {
-    label: "ACTIVE",
+    labelKey: "status.active",
     className:
       "bg-[#d73b19] text-white border-2 border-black",
   },
   voting: {
-    label: "VOTING",
+    labelKey: "status.voting",
     className:
       "bg-black text-[#d73b19] border-2 border-black animate-pulse-border",
   },
   "voting-closed": {
-    label: "CLOSED",
+    labelKey: "status.votingClosed",
     className: "bg-white text-black border-2 border-black",
   },
   refunded: {
-    label: "REFUNDED",
+    labelKey: "status.refunded",
     className: "bg-white text-black border-2 border-black",
   },
   finalized: {
-    label: "FINALIZED",
+    labelKey: "status.finalized",
     className:
       "bg-black text-white border-2 border-black opacity-70",
   },
@@ -78,13 +81,15 @@ export function getSessionStatus(params: {
  * Renders a brutalist status badge.
  */
 export function StatusBadge({ status, className = "" }: StatusBadgeProps) {
+  const { t } = useLanguage();
   const config = statusConfig[status];
+  const label = t(config.labelKey);
 
   return (
     <span
       className={`inline-block px-3 py-1.5 text-[10px] font-bold tracking-[0.2em] uppercase ${config.className} ${className}`}
     >
-      {config.label}
+      {label}
     </span>
   );
 }

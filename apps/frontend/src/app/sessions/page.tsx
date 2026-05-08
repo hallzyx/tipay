@@ -8,6 +8,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useFreighter } from "@/hooks/useFreighter";
 import { useContractRead } from "@/hooks/useContract";
+import { useLanguage } from "@/contexts/language";
 import { useRefresh } from "@/contexts/refresh";
 import {
   getSessionCount,
@@ -37,6 +38,7 @@ export default function DashboardPage() {
   const { connected, address } = useFreighter();
   const { read } = useContractRead(address ?? undefined);
   const { triggerBalanceRefresh } = useRefresh();
+  const { t } = useLanguage();
 
   const [sessions, setSessions] = useState<SessionSummary[]>([]);
   const [loading, setLoading] = useState(true);
@@ -133,11 +135,11 @@ export default function DashboardPage() {
           <div>
             <div className="flex items-center gap-3 mb-2">
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
-                Connected Wallet
+                {t("sessions.connectedWallet")}
               </span>
             </div>
             <span className="text-sm font-mono tracking-wide">
-              {address ? shortAddress(address) : "Not connected"}
+              {address ? shortAddress(address) : t("sessions.notConnected")}
             </span>
           </div>
           <button
@@ -156,7 +158,7 @@ export default function DashboardPage() {
           className="flex items-center gap-3 px-6 py-3 border-2 border-black bg-[#d73b19] text-white font-black text-sm uppercase tracking-[0.1em] hover:bg-white hover:text-[#d73b19] transition-all active:translate-x-0.5 active:translate-y-0.5 shadow-hard-sm"
         >
           <Plus className="w-5 h-5" strokeWidth={3} />
-          New Session
+          {t("sessions.new")}
         </button>
       </div>
 
@@ -178,19 +180,19 @@ export default function DashboardPage() {
         <div className="border-2 border-black p-8 text-center shadow-hard-sm bg-white">
           <p className="text-4xl font-black mb-2 text-[#d73b19]">{activeSessions.length}</p>
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
-            Active
+            {t("sessions.active")}
           </p>
         </div>
         <div className="border-2 border-black p-8 text-center shadow-hard-sm bg-white">
           <p className="text-4xl font-black mb-2">{sessions.length}</p>
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
-            Total Sessions
+            {t("sessions.total")}
           </p>
         </div>
         <div className="border-2 border-black p-8 text-center shadow-hard-sm bg-white">
           <p className="text-4xl font-black mb-2">{pastSessions.length}</p>
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">
-            History
+            {t("sessions.history")}
           </p>
         </div>
       </div>
@@ -201,10 +203,10 @@ export default function DashboardPage() {
           <div className="flex items-center gap-3 mb-8 pb-6 border-b-2 border-black">
             <Shield className="w-5 h-5 text-[#d73b19]" strokeWidth={3} />
             <h2 className="text-sm font-black uppercase tracking-[0.15em]">
-              Active Sessions
+              {t("sessions.activeSessions")}
             </h2>
             <span className="ml-auto text-xs font-mono text-gray-400">
-              {activeSessions.length} found
+              {activeSessions.length} {t("sessions.found")}
             </span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -234,10 +236,10 @@ export default function DashboardPage() {
           <div className="flex items-center gap-3 mb-8 pb-6 border-b-2 border-black">
             <Users className="w-5 h-5 text-gray-400" strokeWidth={3} />
             <h2 className="text-sm font-black uppercase tracking-[0.15em] text-gray-400">
-              History
+              {t("sessions.pastSessions")}
             </h2>
             <span className="ml-auto text-xs font-mono text-gray-400">
-              {pastSessions.length} found
+              {pastSessions.length} {t("sessions.found")}
             </span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 opacity-60">
@@ -266,16 +268,16 @@ export default function DashboardPage() {
         <div className="text-center py-20 border-2 border-dashed border-gray-300 max-w-xl mx-auto bg-white">
           <Users className="w-16 h-16 mx-auto mb-6 text-gray-300" strokeWidth={2} />
           <p className="text-xl font-black uppercase tracking-[0.1em] text-gray-400 mb-3">
-            No Sessions Yet
+            {t("sessions.noSessions")}
           </p>
           <p className="text-sm text-gray-400 mb-8">
-            Create your first accountability session
+            {t("sessions.noSessionsDesc")}
           </p>
           <button
             onClick={() => setShowCreate(true)}
             className="px-8 py-3 border-2 border-black bg-black text-white font-black text-sm uppercase tracking-[0.1em] hover:bg-[#d73b19] hover:border-[#d73b19] transition-all active:translate-x-0.5 active:translate-y-0.5"
           >
-            Create Session
+            {t("sessions.createFirst")}
           </button>
         </div>
       )}

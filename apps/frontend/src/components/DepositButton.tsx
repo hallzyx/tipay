@@ -14,6 +14,7 @@ import {
 } from "@/hooks/useContract";
 import { useContractRead } from "@/hooks/useContract";
 import { useRefresh } from "@/contexts/refresh";
+import { useLanguage } from "@/contexts/language";
 import { formatStroops } from "@/lib/utils";
 import { ArrowDownToLine, Check } from "lucide-react";
 
@@ -36,6 +37,7 @@ export function DepositButton({
   const contractWrite = useContractWrite();
   const { read } = useContractRead();
   const { triggerBalanceRefresh } = useRefresh();
+  const { t } = useLanguage();
   const [alreadyDeposited, setAlreadyDeposited] = useState(false);
   const [checking, setChecking] = useState(true);
 
@@ -79,7 +81,7 @@ export function DepositButton({
       <div className="flex items-center gap-3 border-2 border-black bg-black text-white p-6 shadow-hard-sm">
         <Check className="w-6 h-6" strokeWidth={3} />
         <span className="text-sm font-bold uppercase tracking-[0.1em]">
-          Deposited {formatStroops(amount, 2, "USDC")}
+          {t("deposit.deposited").replace("{amount}", formatStroops(amount, 2, "USDC"))}
         </span>
       </div>
     );
@@ -92,7 +94,7 @@ export function DepositButton({
   return (
     <div className="border-2 border-black p-6 shadow-hard-sm">
       <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mb-4">
-        Your Deposit
+        {t("deposit.yourDeposit")}
       </p>
       <p className="text-3xl font-black mb-4">{formatStroops(amount, 2, "USDC")}</p>
       <button
@@ -101,11 +103,11 @@ export function DepositButton({
         className="w-full flex items-center justify-center gap-3 py-4 border-2 border-black bg-[#d73b19] text-white font-black text-sm uppercase tracking-[0.1em] hover:bg-black transition-all active:translate-x-0.5 active:translate-y-0.5 disabled:opacity-50 shadow-hard-sm"
       >
         <ArrowDownToLine className="w-5 h-5" strokeWidth={3} />
-        {contractWrite.state === "building" && "Building…"}
-        {contractWrite.state === "signing" && "Sign in Wallet…"}
-        {contractWrite.state === "submitting" && "On Chain…"}
-        {contractWrite.state === "idle" && "Deposit"}
-        {contractWrite.state === "error" && "Try Again"}
+        {contractWrite.state === "building" && t("deposit.building")}
+        {contractWrite.state === "signing" && t("deposit.signing")}
+        {contractWrite.state === "submitting" && t("deposit.submitting")}
+        {contractWrite.state === "idle" && t("deposit.button")}
+        {contractWrite.state === "error" && t("deposit.tryAgain")}
       </button>
       {contractWrite.error && (
         <p className="text-xs font-bold text-[#d73b19] mt-3">

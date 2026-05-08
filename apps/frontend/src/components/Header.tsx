@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useFreighter } from "@/hooks/useFreighter";
 import { useTokenBalance } from "@/hooks/useTokenBalance";
 import { useRefresh } from "@/contexts/refresh";
+import { useLanguage } from "@/contexts/language";
 import { shortAddress } from "@/lib/utils";
 import { tokenSacAddress } from "@/lib/stellar";
 import {
@@ -20,11 +21,13 @@ import {
   Menu,
   X,
   Copy,
+  Globe,
 } from "lucide-react";
 
 export function Header() {
   const { connected, address, connect, disconnect } = useFreighter();
   const { balanceKey } = useRefresh();
+  const { t, locale, toggleLocale } = useLanguage();
   const { balance, loading: balLoading } = useTokenBalance(
     address ?? null,
     tokenSacAddress,
@@ -63,7 +66,7 @@ export function Header() {
             href="/sessions"
             className="text-sm font-bold uppercase tracking-[0.15em] hover:text-[#d73b19] transition-colors"
           >
-            Sessions
+            {t("header.sessions")}
           </a>
 
           {connected && address ? (
@@ -85,7 +88,7 @@ export function Header() {
                 >
                   <div className="p-4 border-b-2 border-black">
                     <p className="text-[10px] font-bold tracking-[0.2em] text-gray-500 uppercase mb-2">
-                      Connected As
+                      {t("header.connectedAs")}
                     </p>
                     <div className="flex items-center justify-between mb-3">
                       <span className="text-xs font-mono text-gray-500 tracking-wide">
@@ -116,6 +119,19 @@ export function Header() {
                       </span>
                     </div>
                   </div>
+
+                  {/* Locale toggle */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleLocale();
+                    }}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-widest border-b-2 border-black hover:bg-gray-100 transition-colors"
+                  >
+                    <Globe className="w-3.5 h-3.5" strokeWidth={3} />
+                    {locale === "en" ? "ES" : "EN"}
+                  </button>
+
                   <button
                     onClick={() => {
                       disconnect();
@@ -124,7 +140,7 @@ export function Header() {
                     className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold hover:bg-[#d73b19] hover:text-white transition-colors"
                   >
                     <LogOut className="w-4 h-4" strokeWidth={3} />
-                    DISCONNECT
+                    {t("header.disconnect")}
                   </button>
                 </div>
               )}
@@ -160,7 +176,7 @@ export function Header() {
               className="block text-sm font-bold uppercase tracking-[0.15em] hover:text-[#d73b19]"
               onClick={() => setMobileOpen(false)}
             >
-              Sessions
+              {t("header.sessions")}
             </a>
             {connected && address ? (
               <div className="space-y-3 border-t-2 border-black pt-4">
@@ -180,7 +196,7 @@ export function Header() {
                   className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-black bg-black text-white font-bold text-sm hover:bg-[#d73b19] hover:border-[#d73b19] transition-all"
                 >
                   <LogOut className="w-4 h-4" strokeWidth={3} />
-                  DISCONNECT
+                  {t("header.disconnect")}
                 </button>
               </div>
             ) : (
@@ -190,7 +206,7 @@ export function Header() {
                 className="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-black bg-black text-white font-bold text-sm hover:bg-[#d73b19] hover:border-[#d73b19] transition-all"
               >
                 <Wallet className="w-4 h-4" strokeWidth={3} />
-                {connecting ? "CONNECTING…" : "CONNECT WALLET"}
+              {connecting ? t("header.connecting") : t("header.connectWallet")}
               </button>
             )}
           </div>

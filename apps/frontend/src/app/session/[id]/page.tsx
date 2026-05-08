@@ -7,6 +7,7 @@
 import { use, useState, useEffect } from "react";
 import { useFreighter } from "@/hooks/useFreighter";
 import { useRefresh } from "@/contexts/refresh";
+import { useLanguage } from "@/contexts/language";
 import {
   useContractRead,
   useContractWrite,
@@ -62,6 +63,7 @@ export default function SessionDetailPage({
   const { read } = useContractRead(address ?? undefined);
   const contractWrite = useContractWrite();
   const { triggerBalanceRefresh } = useRefresh();
+  const { t } = useLanguage();
   const [sessionRefreshKey, setSessionRefreshKey] = useState(0);
 
   const [session, setSession] = useState<{
@@ -164,17 +166,17 @@ export default function SessionDetailPage({
       <div className="w-full px-8 lg:px-16 xl:px-24 pt-28 pb-16 text-center">
         <X className="w-20 h-20 mx-auto mb-6 text-[#d73b19]" strokeWidth={2} />
         <h2 className="text-3xl font-black uppercase tracking-tight mb-4">
-          Session Not Found
+          {t("session.notFound")}
         </h2>
         <p className="text-gray-500 mb-8 text-lg">
-          Session #{id} doesn&apos;t exist.
+          {t("session.notFoundDesc")}
         </p>
         <Link
           href="/sessions"
           className="inline-flex items-center gap-3 px-6 py-3 border-2 border-black font-bold text-sm uppercase tracking-[0.1em] hover:bg-black hover:text-white transition-all"
         >
           <ArrowLeft className="w-4 h-4" strokeWidth={3} />
-          Back to Sessions
+          {t("session.back")}
         </Link>
       </div>
     );
@@ -209,7 +211,7 @@ export default function SessionDetailPage({
           className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] text-gray-500 hover:text-black transition-colors"
         >
           <ArrowLeft className="w-4 h-4" strokeWidth={3} />
-          Back to Sessions
+          {t("session.back")}
         </Link>
         <button
           onClick={() => {
@@ -242,7 +244,7 @@ export default function SessionDetailPage({
           <div className="border-2 border-black p-6 bg-white">
             <Coins className="w-5 h-5  mb-2 text-[#d73b19]" strokeWidth={3} />
             <p className="text-2xl font-black">{formatStroops(session.amount)}</p>
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mt-1">USDC / Person</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mt-1">{t("session.usdcPerPerson")}</p>
           </div>
           <div className="border-2 border-black p-6 bg-white">
             <Users className="w-5 h-5 text-[#d73b19] mb-2" strokeWidth={3} />
@@ -250,21 +252,21 @@ export default function SessionDetailPage({
               {participants.filter((p) => p.deposited).length}/
               {session.participant_count}
             </p>
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mt-1">Deposited</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mt-1">{t("session.deposited")}</p>
           </div>
           <div className="border-2 border-black p-6 bg-white">
             <Clock className="w-5 h-5 text-[#d73b19] mb-2" strokeWidth={3} />
             <p className="text-sm font-black font-mono">
               {formatDate(session.deadline)}
             </p>
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mt-1">Event</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mt-1">{t("session.event")}</p>
           </div>
           <div className="border-2 border-black p-6 bg-white">
             <Clock className="w-5 h-5 text-[#d73b19] mb-2" strokeWidth={3} />
             <p className="text-sm font-black font-mono">
               {formatDate(BigInt(votingEnd))}
             </p>
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mt-1">Voting Ends</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500 mt-1">{t("session.votingEnds")}</p>
           </div>
         </div>
 
@@ -273,7 +275,7 @@ export default function SessionDetailPage({
           onClick={copyId}
           className="flex items-center gap-2 text-xs font-mono text-gray-400 hover:text-black transition-colors"
         >
-          <span className="font-bold uppercase tracking-widest">ID:</span> {sessionId}
+          <span className="font-bold uppercase tracking-widest">{t("session.id")}</span> {sessionId}
           {copied ? (
             <Check className="w-4 h-4 text-green-600" strokeWidth={3} />
           ) : (
@@ -285,7 +287,7 @@ export default function SessionDetailPage({
       {/* Participants */}
       <div className="border-2 border-black p-10 mb-10 shadow-hard-sm bg-white">
         <h3 className="text-sm font-black uppercase tracking-[0.15em] mb-8 pb-6 border-b-2 border-black">
-          Participants
+          {t("session.participants")}
         </h3>
         <div className="divide-y-2 divide-black">
           {participants.map((p, i) => (
@@ -303,12 +305,12 @@ export default function SessionDetailPage({
                 <div className="flex items-center gap-2">
                   {p.isHost && (
                     <span className="text-[10px] font-bold text-[#d73b19] uppercase tracking-widest">
-                      Host
+                      {t("session.host")}
                     </span>
                   )}
                   {p.isYou && (
                     <span className="text-[10px] font-bold text-black border-2 border-black px-2 py-0.5 uppercase tracking-widest">
-                      You
+                      {t("session.you")}
                     </span>
                   )}
                 </div>
@@ -321,7 +323,7 @@ export default function SessionDetailPage({
                 )}
                 {session.finalized && (
                   <span className="text-xs font-mono text-gray-400">
-                    {p.votesAgainst} votes
+                    {p.votesAgainst} {t("session.votes")}
                   </span>
                 )}
               </div>
@@ -364,13 +366,12 @@ export default function SessionDetailPage({
         <div className="border-2 border-black p-10 mb-10 shadow-hard-sm max-w-2xl mx-auto bg-white">
           <div className="flex items-center gap-3 mb-4">
             <Lock className="w-6 h-6 text-gray-400" strokeWidth={3} />
-            <span className="text-sm font-bold uppercase tracking-[0.15em] text-gray-500">
-              Voting Window Closed
-            </span>
+              <span className="text-sm font-bold uppercase tracking-[0.15em] text-gray-500">
+                {t("session.votingWindowClosed")}
+              </span>
           </div>
           <p className="text-sm text-gray-500 mb-6 leading-relaxed">
-            Anyone can resolve this session now. Absentees lose their
-            deposit, attendees split the pool.
+            {t("session.votingWindowDesc")}
           </p>
           <button
             onClick={handleFinalize}
@@ -379,12 +380,12 @@ export default function SessionDetailPage({
             )}
             className="w-full py-4 border-2 border-black bg-[#d73b19] text-white font-black text-sm uppercase tracking-[0.1em] hover:bg-black transition-all active:translate-x-0.5 active:translate-y-0.5 disabled:opacity-50 shadow-hard-sm"
           >
-            {contractWrite.state === "idle" && "Resolve Session"}
-            {contractWrite.state === "building" && "Building…"}
-            {contractWrite.state === "signing" && "Sign in Wallet…"}
-            {contractWrite.state === "submitting" && "On Chain…"}
-            {contractWrite.state === "success" && "✓ Resolved!"}
-            {contractWrite.state === "error" && "Try Again"}
+            {contractWrite.state === "idle" && t("session.resolve")}
+            {contractWrite.state === "building" && t("session.building")}
+            {contractWrite.state === "signing" && t("session.signing")}
+            {contractWrite.state === "submitting" && t("session.submitting")}
+            {contractWrite.state === "success" && t("session.resolved")}
+            {contractWrite.state === "error" && t("session.tryAgain")}
           </button>
           {contractWrite.error && (
             <p className="text-xs font-bold text-[#d73b19] mt-3">
@@ -399,11 +400,10 @@ export default function SessionDetailPage({
         <div className="border-2 border-black bg-black text-white p-10 text-center shadow-hard max-w-2xl mx-auto">
           <Check className="w-16 h-16 mx-auto mb-4 text-green-400" strokeWidth={2} />
           <h3 className="text-2xl font-black uppercase tracking-tight mb-3">
-            Session Finalized
+            {t("session.finalized.title")}
           </h3>
           <p className="text-sm text-gray-400 leading-relaxed max-w-md mx-auto">
-            Funds have been distributed. Absentees lost their deposit,
-            attendees received their share.
+            {t("session.finalized.desc")}
           </p>
         </div>
       )}
